@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoRECT: Overview and Results</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Font: Fira Sans -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fira Sans', sans-serif;
+    }
+    .plot-table {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .plot-item {
+      min-width: 200px;
+    }
+    .plot-wide-2x {
+      flex: 1 1 calc(40% - 1rem);
+    }
+    .plot-wide-2_5x {
+      flex: 1 1 calc(50% - 1rem);
+    }
+    .subcaption {
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.25rem;
+    }
+    select[multiple] {
+      height: auto !important;
+    }
+  </style>
+</head>
+<body class="bg-light p-4">
+  <div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">Overview</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button" role="tab">Results</button>
+      </li>
+    </ul>
+    <div class="tab-content mt-3">
+      <!-- Overview Tab -->
+      <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        <h1>How Compression Affects Ranking: A Robust Evaluation of Dense Embeddings</h1>
+
+        <p>
+          This project accompanies our paper on evaluating embedding compression techniques for dense retrieval at scale.
+          We present <strong>CoRECT</strong>, a framework designed to systematically measure the impact of compression strategies on retrieval performance.
+        </p>
+
+        <p>Our work addresses two main objectives:</p>
+        <ul>
+          <li><strong>Comparing embedding compression methods</strong>: We benchmark <strong>quantization</strong>, <strong>binarization</strong>, and <strong>dimensionality reduction</strong> techniques.</li>
+          <li><strong>Analyzing scalability</strong>: We evaluate how retrieval quality degrades or holds up when scaling the corpus from <strong>10K to 100M passages</strong> and from <strong>10K to 10M documents</strong>.</li>
+        </ul>
+
+        <p>Our findings show that:</p>
+        <ul>
+          <li><strong>Quantization</strong> consistently outperforms dimensionality reduction, especially on larger corpora.</li>
+          <li>Retrieval effectiveness can be preserved even at <strong>32× compression</strong> for large-scale corpora. This highlights the practicality of lightweight embedding representations.</li>
+        </ul>
+
+        <h2>CoRE: Controlled Retrieval Evaluation</h2>
+
+        <p>
+          The <strong>CoRE benchmark</strong> is a key component of our framework. It enables controlled experiments by varying corpus size and document length independently.
+          Built upon <strong>MS MARCO v2</strong> and human relevance judgments (<strong>TREC DL 2023</strong>), CoRE provides:
+        </p>
+
+        <ul>
+          <li><strong>Passage retrieval</strong>: 65 queries over 5 corpus sizes (10K to 100M)</li>
+          <li><strong>Document retrieval</strong>: 55 queries over 4 corpus sizes (10K to 10M)</li>
+        </ul>
+
+        <p>To ensure realistic evaluation:</p>
+        <ul>
+          <li>Each query includes <strong>10 high-quality relevant documents</strong></li>
+          <li>We adopt an advanced <strong>subsampling technique</strong> to retain <strong>hard distractors</strong>, drawn from top-ranked TREC DL system runs</li>
+          <li>Each query is paired with <strong>100 mined distractors</strong> and additional random negatives</li>
+        </ul>
+
+        <p>
+          This design makes CoRE robust for analyzing how retrieval performance is affected by corpus complexity and size.
+        </p>
+
+        <h2>Quantization Methods</h2>
+
+        <p>
+          We implement and benchmark a range of <strong>vector quantization techniques</strong>, including:
+        </p>
+
+        <ul>
+          <li><strong>Scalar quantization</strong>: Values are mapped into fixed bit-width ranges (e.g., 8-bit → 256 bins), computed on a per-batch and per-dimension basis using <strong>percentile binning</strong></li>
+          <li><strong>Binarization</strong>: Each embedding value is converted to 0 or 1 using the <strong>median</strong> of each dimension as the threshold</li>
+          <li><strong>Casting</strong>: We include <strong>16-bit float casting</strong> as a lightweight alternative to full 32-bit precision</li>
+        </ul>
+
+        <h3>Implementation Details</h3>
+
+        <ul>
+          <li>Quantization is applied to batches of up to <strong>50,000 vectors</strong></li>
+          <li>Percentile boundaries (e.g., 25th, 50th, 75th) are computed for 2-bit quantization, producing 4 discrete bins per dimension</li>
+          <li>Results are given in a <strong>grid of 36 compression levels</strong>, combining:
+            <ul>
+              <li>Full and truncated dimensionalities (1024 → 32)</li>
+              <li>Quantization levels (32-bit → 1-bit)</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p>
+          These methods are integrated into our open-source evaluation framework, making it easy to reproduce results and test new methods.
+        </p>
+
+        <h2>Getting Started</h2>
+
+        <p>To run the evaluation framework, follow these steps:</p>
+
+        <p><em>TODO: Evaluate your own vector compression methods</em></p>
+
+        <ol>
+          <li>Clone the repository:</li>
+        </ol>
+
+        <pre><code>git clone</code></pre>
+      </div>
+
+      <!-- Results Tab -->
+      <div class="tab-pane fade" id="results" role="tabpanel">
+        <p>Please select from the options below to view the plots.</p>
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <label class="form-label">Dataset</label>
+            <select class="form-select" id="dataset">
+              <option value="core">CoRE</option>
+              <option value="beir">BEIR</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Metric</label>
+            <select class="form-select" id="metric">
+              <option value="ndcg_at_10">NDCG@10</option>
+              <option value="recall_at_100">Recall@100</option>
+              <option value="recall_at_1000">Recall@1000</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Model</label>
+            <select class="form-select" id="models" multiple size="2">
+              <option selected>Jina v3</option>
+              <option>Multilingual E5 (instruct)</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Visualization</label>
+            <select class="form-select" id="visualization">
+              <option value="heatmaps">Heatmaps</option>
+              <option value="line_charts">Line charts</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="plotContainer">
+          <!-- Plots will appear here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const datasetSelect = document.getElementById('dataset');
+    const visualizationSelect = document.getElementById('visualization');
+    const modelSelect = document.getElementById('models');
+    const metricSelect = document.getElementById('metric');
+    const plotContainer = document.getElementById('plotContainer');
+
+    [datasetSelect, visualizationSelect, modelSelect, metricSelect].forEach(el => el.addEventListener('change', renderPlots));
+
+    function sanitizeModel(model) {
+      return model === 'Jina v3' ? 'JinaV3Wrapper' : 'E5MultilingualWrapper';
+    }
+
+    function renderPlots() {
+      const dataset = datasetSelect.value;
+      const viz = visualizationSelect.value;
+      const metric = metricSelect.value;
+      const selectedModels = Array.from(modelSelect.selectedOptions).map(o => o.value);
+      if (selectedModels.length === 0) {
+        selectedModels.push('Jina v3');
+        modelSelect.options[0].selected = true;
+      }
+      plotContainer.innerHTML = '';
+
+      const makePlot = (src, caption, extraClass = '') => `
+        <div class="plot-item ${extraClass}" title="${caption}">
+          <embed src="${src}" width="100%"/>
+          <div class="subcaption">${caption}</div>
+        </div>`;
+
+      selectedModels.forEach(model => {
+        const modelDir = sanitizeModel(model);
+        const modelHeader = `<h5 class="mt-4">Model: ${model}</h5>`;
+        let content = '';
+
+        if (viz === 'heatmaps') {
+          const dataset_name = dataset === 'core' ? 'CoRE' : 'BEIR';
+          content += '<p>Performance on ' + dataset_name + ' combining different levels of dimensionality reduction (y-axis) with different levels of precision/quantization (x-axis).</p>'
+          if (dataset === 'core') {
+            let src1 = [];
+            let src2 = [];
+            for (let i = 0; i <= 4; i++) {
+              src1.push(`../resources/heatmaps/${modelDir}/${metric}/core/passage_${10000*(10**i)}.png`);
+              src2.push(i <= 3 ? `../resources/heatmaps/${modelDir}/${metric}/core/document_${10000*(10**i)}.png` : null);
+            }
+            content += '<div class="plot-table mt-3">' + src1.map((src, i) => makePlot(src, `Passage corpus size=${10000*(10**i)}`)).join('') + '</div>';
+            content += '<div class="plot-table">' + src2.map((src, i) => src ? makePlot(src, `Document corpus size=${10000*(10**i)}`) : '').join('') + '</div>';
+          } else if (dataset === 'beir') {
+            const batch1 = [`../resources/heatmaps/${modelDir}/${metric}/beir/aggregated.png`];
+            const dataset_names = ['ArguAna', 'CQADupstack', 'DBPedia', 'FiQA-2018', 'NFCorpus', 'NQ', 'Quora', 'SCIDOCS', 'SciFact', 'Touche-2020', 'TREC-COVID']
+            const datasets = ['arguana', 'cqadupstack',  'dbpedia', 'fiqa', 'nfcorpus', 'nq', 'quora', 'scidocs', 'scifact', 'touche2020', 'trec-covid',];
+            const batch2 = datasets.map(name => `../resources/heatmaps/${modelDir}/${metric}/beir/${name}.png`);
+
+            content += '<div class="plot-table mt-3">' + makePlot(batch1[0], 'Average performance and standard deviation on BEIR datasets with absolute performance delta to full precision (upper left corner)') + batch2.map((src, i) => makePlot(src, dataset_names[i])).join('') + '</div>';
+          }
+        } else if (viz === 'line_charts' && dataset === 'core') {
+          content += '<p>Performance on the CoRE dataset with:<br> a) full-precision, i.e. 32-bit floating point vectors, passage retrieval reducing dimensionality, i.e. only taking the first 32 vector dimensions,<br> b) passage retrieval with all vector dimensions but different levels of quantization, and<br> c) document retrieval with all vector dimensions but different levels of quantization.</p>'
+          const plots = [
+            { file: `../resources/line_charts/${modelDir}/${metric}/combined.png`, caption: '', width: 'plot-wide-2_5x' }
+          ];
+          content += '<div class="plot-grid">' + plots.map(p => makePlot(p.file, p.caption, p.width)).join('') + '</div>';
+        }
+
+        plotContainer.innerHTML += modelHeader + content;
+      });
+    }
+
+    function updateVisualizationOptions() {
+      const selectedDataset = datasetSelect.value;
+      const lineOption = visualizationSelect.querySelector('option[value="line_charts"]');
+      if (selectedDataset === 'beir') {
+        if (visualizationSelect.value === 'line_charts') {
+          visualizationSelect.value = 'heatmaps';
+        }
+        lineOption.disabled = true;
+      } else {
+        lineOption.disabled = false;
+      }
+    }
+
+    datasetSelect.addEventListener('change', () => {
+      updateVisualizationOptions();
+      renderPlots();
+    });
+
+    updateVisualizationOptions();
+
+    renderPlots();
+  </script>
+</body>
+</html>
