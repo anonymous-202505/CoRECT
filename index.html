@@ -260,16 +260,16 @@
             let src1 = [];
             let src2 = [];
             for (let i = 0; i <= 4; i++) {
-              src1.push(`./resources/heatmaps/${modelDir}/${metric}/core/passage_${10000*(10**i)}.png`);
-              src2.push(i <= 3 ? `./resources/heatmaps/${modelDir}/${metric}/core/document_${10000*(10**i)}.png` : null);
+              src1.push(`./resources/heatmaps/${modelDir}/${metric}/passage_${10000*(10**i)}.png`);
+              src2.push(i <= 3 ? `./resources/heatmaps/${modelDir}/${metric}/document_${10000*(10**i)}.png` : null);
             }
             content += '<div class="plot-table mt-3">' + src1.map((src, i) => makePlot(src, `Passage corpus size=${10000*(10**i)}`)).join('') + '</div>';
             content += '<div class="plot-table">' + src2.map((src, i) => src ? makePlot(src, `Document corpus size=${10000*(10**i)}`) : '').join('') + '</div>';
           } else if (dataset === 'beir') {
-            const batch1 = [`./resources/heatmaps/${modelDir}/${metric}/beir/aggregated.png`];
+            const batch1 = [`./resources/heatmaps/${modelDir}/${metric}/aggregated.png`];
             const dataset_names = ['ArguAna', 'CQADupstack', 'DBPedia', 'FiQA-2018', 'NFCorpus', 'NQ', 'Quora', 'SCIDOCS', 'SciFact', 'Touche-2020', 'TREC-COVID']
             const datasets = ['arguana', 'cqadupstack',  'dbpedia', 'fiqa', 'nfcorpus', 'nq', 'quora', 'scidocs', 'scifact', 'touche2020', 'trec-covid',];
-            const batch2 = datasets.map(name => `./resources/heatmaps/${modelDir}/${metric}/beir/${name}.png`);
+            const batch2 = datasets.map(name => `./resources/heatmaps/${modelDir}/${metric}/${name}.png`);
 
             content += '<div class="plot-table mt-3">' + makePlot(batch1[0], 'Average performance and standard deviation on BEIR datasets with absolute performance delta to full precision (upper left corner)') + batch2.map((src, i) => makePlot(src, dataset_names[i])).join('') + '</div>';
           }
