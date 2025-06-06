@@ -49,7 +49,7 @@
     <div class="tab-content mt-3">
       <!-- Overview Tab -->
       <div class="tab-pane fade show active" id="overview" role="tabpanel">
-        <h1>How Compression Affects Ranking: A Robust Evaluation of Dense Embeddings</h1>
+        <h1>CoRECT: A Framework for Evaluating Embedding Compression Techniques</h1>
 
         <p>
           This project accompanies our paper on evaluating embedding compression techniques for dense retrieval at scale.
@@ -107,7 +107,7 @@
 
         <ul>
           <li>Quantization is applied to batches of up to <strong>50,000 vectors</strong></li>
-          <li>Percentile boundaries (e.g., 25th, 50th, 75th) are computed for 2-bit quantization, producing 4 discrete bins per dimension</li>
+          <li>Percentile boundaries are computed for quantization, e.g., 25th, 50th, 75th for 2 bits, producing 4 discrete bins per dimension</li>
           <li>Results are given in a <strong>grid of 36 compression levels</strong>, combining:
             <ul>
               <li>Full and truncated dimensionalities (1024 → 32)</li>
@@ -126,11 +126,53 @@
 
         <p><em>TODO: Evaluate your own vector compression methods</em></p>
 
-        <ol>
-          <li>Clone the repository:</li>
-        </ol>
+        <h3>1. Clone the repository</h3>
 
         <pre><code>git clone</code></pre>
+
+        <h3>2. Install dependencies</h3>
+
+        <p>There are two ways you can install the dependencies to run the code.</p>
+
+        <h5>Using Poetry (recommended)</h5>
+
+        <p>If you have the <a href="https://python-poetry.org/">Poetry</a> package manager for Python installed already, you can simply set up everything with:</p>
+        <pre><code>poetry install<br>source $(poetry env info --path)/bin/activate</code></pre>
+        <p>After the installation of all dependencies, you will end up in a new shell with a loaded venv. In this shell, you can run the main <em>corect</em> command. You can exit the shell at any time with <em>exit</em>.</p>
+        <pre><code>corect --help</code></pre>
+        <p>To install new dependencies in an existing poetry environment, you can run the following commands with the shell environment being activated:</p>
+        <pre><code>poetry lock<br>poetry install</code></pre>
+
+        <h5>Using Pip (alternative)</h5>
+
+        <p>You can also create a venv yourself and use `pip` to install dependencies:</p>
+        <pre><code>python3 -m venv venv<br>source venv/bin/activate<br>pip install .</code></pre>
+
+        <h3>3. Run evaluation code</h3>
+
+        <p>The evaluation code currently supports two datasets: A transformed version of the MS MARCO v2 dataset, called CoRE, and public BEIR datasets. In addition to the dataset, the code also loads an embedding model (currently Jina V3 or E5-Multilingual) to evaluate the defined compression techniques. To start the evaluation, execute the command</p>
+        <pre><code>corect evaluate jina core     # Evaluates Jina V3 on CoRE<br>corect evaluate e5 beir       # Evaluates E5-Multilingual on BEIR</code></pre>
+        <p>After running the evaluation code, you will find the results in the <em>results</em> folder. The results are stored in a JSON file with the name of the model and the dataset. To share the results, copy the respective JSON file to the <em>share_results</em> folder.</p>
+
+        <h5>4. Extend CoRECT</h5>
+
+        <h5>Add new compression technique</h5>
+        <p>The currently implemented compression techniques can be found in the <a href="https://github.com/anonymous-202505/CoRECT/tree/main/src/corect/quantization">quantization</a> folder.
+          To add a new method, implement a class that extends <a href="https://github.com/anonymous-202505/CoRECT/blob/main/src/corect/quantization/AbstractCompression.py">AbstractCompression</a> and add your custom compression method via the <em>compress()</em> method.
+          To include your class in the evaluation, modify the <a href="https://github.com/anonymous-202505/CoRECT/blob/main/src/corect/compression_registry.py">compression registry</a> and register your class with the compression methods dictionary.
+          You should now be able to evaluate your compression technique by running the evaluation script as described above.</p>
+
+        <h5>Add new model</h5>
+        <p>New models can be added by implementing the <a href="https://github.com/anonymous-202505/CoRECT/blob/main/src/corect/model_wrappers/AbstractModelWrapper.py">AbstractModelWrapper</a> class, which allows you to customize the query and corpus embedding process.
+          The wrapper then needs to be registered in the <em>_get_model_wrapper()</em> method of the <a href="https://github.com/anonymous-202505/CoRECT/blob/main/src/corect/cli/evaluate.py">evaluation script</a> and the model name defined there can then be used to evaluate the model.</p>
+        <pre><code>corect evaluate &lt;model_name&gt; core</code></pre>
+
+        <h5>Add new dataset</h5>
+        <p>Our framework supports the addition of any HuggingFace retrieval datasets with corpus, queries and qrels splits.
+          To add a custom dataset, navigate to the <a href="https://github.com/anonymous-202505/CoRECT/blob/main/src/corect/dataset_utils.py">dataset utils</a> script, add a load function for your new dataset and register it in the <em>load_data()</em> function.
+          You also need to add information on the new dataset to the <em>datasets</em> dictionary in this class in the form of <em>datasets[&lt;dataset_name&gt;]=[&lt;dataset_name&gt;]</em>.
+          Running the evaluation script on the new dataset can then be achieved by executing the evaluation command.</p>
+        <pre><code>corect evaluate jina &lt;dataset_name&gt;</code></pre>
       </div>
 
       <!-- Results Tab -->
