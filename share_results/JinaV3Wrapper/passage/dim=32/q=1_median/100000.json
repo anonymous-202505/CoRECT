@@ -1,0 +1,92 @@
+{
+    "ndcg_at_1": 0.12308,
+    "ndcg_at_3": 0.09858,
+    "ndcg_at_5": 0.08629,
+    "ndcg_at_10": 0.07965,
+    "ndcg_at_20": 0.10521,
+    "ndcg_at_100": 0.19885,
+    "ndcg_at_200": 0.2356,
+    "ndcg_at_300": 0.24415,
+    "ndcg_at_500": 0.26893,
+    "ndcg_at_1000": 0.28421,
+    "map_at_1": 0.01231,
+    "map_at_3": 0.02128,
+    "map_at_5": 0.02521,
+    "map_at_10": 0.03184,
+    "map_at_20": 0.03825,
+    "map_at_100": 0.05575,
+    "map_at_200": 0.06053,
+    "map_at_300": 0.06117,
+    "map_at_500": 0.06274,
+    "map_at_1000": 0.06324,
+    "recall_at_1": 0.01231,
+    "recall_at_3": 0.02769,
+    "recall_at_5": 0.03846,
+    "recall_at_10": 0.07231,
+    "recall_at_20": 0.12,
+    "recall_at_100": 0.36154,
+    "recall_at_200": 0.48154,
+    "recall_at_300": 0.51231,
+    "recall_at_500": 0.60923,
+    "recall_at_1000": 0.67538,
+    "precision_at_1": 0.12308,
+    "precision_at_3": 0.09231,
+    "precision_at_5": 0.07692,
+    "precision_at_10": 0.07231,
+    "precision_at_20": 0.06,
+    "precision_at_100": 0.03615,
+    "precision_at_200": 0.02408,
+    "precision_at_300": 0.01708,
+    "precision_at_500": 0.01218,
+    "precision_at_1000": 0.00675,
+    "mrr_at_1": 0.13846,
+    "mrr_at_3": 0.2,
+    "mrr_at_5": 0.21692,
+    "mrr_at_10": 0.23888,
+    "mrr_at_20": 0.25124,
+    "mrr_at_100": 0.25755,
+    "mrr_at_200": 0.25775,
+    "mrr_at_300": 0.2578,
+    "mrr_at_500": 0.25784,
+    "mrr_at_1000": 0.25792,
+    "rc_at_1": {
+        "relevant": 0.13846,
+        "distractor": 0.69231
+    },
+    "rc_at_3": {
+        "relevant": 0.36923,
+        "distractor": 2.04615
+    },
+    "rc_at_5": {
+        "relevant": 0.47692,
+        "distractor": 3.35385
+    },
+    "rc_at_10": {
+        "relevant": 0.8,
+        "distractor": 6.4
+    },
+    "rc_at_20": {
+        "relevant": 1.46154,
+        "distractor": 11.72308
+    },
+    "rc_at_100": {
+        "relevant": 4.0,
+        "distractor": 35.52308
+    },
+    "rc_at_200": {
+        "relevant": 5.13846,
+        "distractor": 45.98462
+    },
+    "rc_at_300": {
+        "relevant": 5.69231,
+        "distractor": 52.03077
+    },
+    "rc_at_500": {
+        "relevant": 6.38462,
+        "distractor": 60.55385
+    },
+    "rc_at_1000": {
+        "relevant": 6.75385,
+        "distractor": 66.43077
+    }
+}
