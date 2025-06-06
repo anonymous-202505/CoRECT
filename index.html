@@ -124,11 +124,11 @@
 
         <p>To run the evaluation framework, follow these steps:</p>
 
-        <h3>1. Clone the repository</h3>
+        <h4>1. Clone the repository</h4>
 
         <pre><code>git clone</code></pre>
 
-        <h3>2. Install dependencies</h3>
+        <h4>2. Install dependencies</h4>
 
         <p>There are two ways you can install the dependencies to run the code.</p>
 
@@ -146,13 +146,13 @@
         <p>You can also create a venv yourself and use `pip` to install dependencies:</p>
         <pre><code>python3 -m venv venv<br>source venv/bin/activate<br>pip install .</code></pre>
 
-        <h3>3. Run evaluation code</h3>
+        <h4>3. Run evaluation code</h4>
 
         <p>The evaluation code currently supports two datasets: A transformed version of the MS MARCO v2 dataset, called CoRE, and public BEIR datasets. In addition to the dataset, the code also loads an embedding model (currently Jina V3 or E5-Multilingual) to evaluate the defined compression techniques. To start the evaluation, execute the command</p>
         <pre><code>corect evaluate jina core     # Evaluates Jina V3 on CoRE<br>corect evaluate e5 beir       # Evaluates E5-Multilingual on BEIR</code></pre>
         <p>After running the evaluation code, you will find the results in the <em>results</em> folder. The results are stored in a JSON file with the name of the model and the dataset. To share the results, copy the respective JSON file to the <em>share_results</em> folder.</p>
 
-        <h5>4. Extend CoRECT</h5>
+        <h4>4. Extend CoRECT</h4>
 
         <h5>Add new compression technique</h5>
         <p>The currently implemented compression techniques can be found in the <a href="https://github.com/anonymous-202505/CoRECT/tree/main/src/corect/quantization">quantization</a> folder.

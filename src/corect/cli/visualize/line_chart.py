@@ -10,7 +10,6 @@ from corect.config import *
 METRICS = {
     "ndcg_at_10": "NDCG@10",
     "recall_at_100": "Recall@100",
-    "recall_at_200": "Recall@200",
     "recall_at_1000": "Recall@1000",
 }
 DATASETS = {
@@ -28,25 +27,23 @@ DATASETS = {
         10_000_000,
     ],
 }
-COMPRESSION_PAIRS_32 = [
-    (1024, "32"),
+COMPRESSION_PAIRS_16 = [
+    (1024, "16_casting"),
     (1024, "1_median"),
     (512, "2_percentile"),
     (256, "4_percentile"),
     (128, "8_percentile"),
     (64, "16_casting"),
-    (32, "32"),
 ]
 COMPRESSION_PAIRS_DIM = [
-    (1024, "32"),
-    (512, "32"),
-    (256, "32"),
-    (128, "32"),
-    (64, "32"),
-    (32, "32"),
+    (1024, "16_casting"),
+    (512, "16_casting"),
+    (256, "16_casting"),
+    (128, "16_casting"),
+    (64, "16_casting"),
+    (32, "16_casting"),
 ]
 COMPRESSION_PAIRS_Q = [
-    (1024, "32"),
     (1024, "16_casting"),
     (1024, "8_percentile"),
     (1024, "4_percentile"),
@@ -65,12 +62,12 @@ def collect_data(
     )
 
     results = {
-        "32": defaultdict(list),
+        "16": defaultdict(list),
         "dim": defaultdict(list),
         "q": defaultdict(list),
     }
 
-    for dim, q in COMPRESSION_PAIRS_32:
+    for dim, q in COMPRESSION_PAIRS_16:
 
         dim_dir = f"dim={dim}"
         q_dir = f"q={q}"
@@ -82,7 +79,7 @@ def collect_data(
             with open(file_path, "r") as f:
                 data = json.load(f)
                 value = data[metric]
-                results["32"][(dim, q)].append(value)
+                results["16"][(dim, q)].append(value)
 
     for dim, q in COMPRESSION_PAIRS_DIM:
 
@@ -139,13 +136,6 @@ def plot_lines(
             plt.plot(corpus_sizes, values, marker="o", label=f"dim={dim}, q={q}")
 
         plt.xscale("log")
-        # plt.xlabel("Corpus Size", fontsize=12)
-        # plt.ylabel(METRICS[metric], fontsize=12)
-        # plt.title(
-        #     f"{METRICS[metric]} vs Corpus Size (Compression Ratio = 32)",
-        #     fontsize=16,
-        #     pad=20,
-        # )
         plt.xticks(
             corpus_sizes,
             [f"{corpus_size:,}" for corpus_size in corpus_sizes],
@@ -156,10 +146,8 @@ def plot_lines(
         plt.grid(True, linestyle="--", alpha=0.6)
         plt.legend(loc="lower left", fontsize=10)
         plt.tight_layout()
-        plt.savefig(
-            plot_path.format(data_index),
-            format="pdf",
-        )
+        plt.savefig(plot_path.format(data_index))
+        plt.savefig(plot_path.format(data_index).replace(".pdf", ".png"), dpi=300)
         plt.close()
 
 
@@ -206,7 +194,7 @@ def plot_combined_lines(model_name: str, metric: str):
         corpus_sizes = corpora[i]
 
         for (dim, q), values in data[key].items():
-            if dim == 1024 and q == "32":
+            if dim == 1024 and q == "16_casting":
                 ax.plot(
                     corpus_sizes,
                     values,
